@@ -52,6 +52,7 @@ select{font:inherit;font-size:16px;color:var(--fg);background:var(--sf2);border:
 .btnl{font:inherit;font-size:14px;padding:10px 14px;border-radius:12px;border:1px solid var(--ac);background:transparent;color:var(--ac);cursor:pointer}
 .pill.bad{background:rgba(214,69,69,.13);color:#b3261e}.lk{color:var(--ac);font-weight:600}.mine.sel{border-color:var(--ac)}#tabs{position:sticky;top:0;z-index:5;background:var(--bg,var(--sf));padding:6px 0}.btn.sm{padding:9px 14px;font-size:14px}
 .clist{display:grid;gap:10px}.mine{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--sf2)}.cdet{font-size:13.5px;line-height:1.7;overflow-wrap:anywhere}.cp{color:var(--mut);font-size:12.5px}.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;line-height:1.6}.pill.good{background:var(--acs);color:var(--ac)}.pill.warn{background:rgba(224,161,0,.15);color:#a07200}
+.tl{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.tl span{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--sf);border:1px solid var(--line);color:var(--mut)}.tl span.done{background:var(--acs);color:var(--ac);border-color:transparent}.tl span.cur{background:var(--ac);color:var(--acf);border-color:transparent;font-weight:600}.pkb,.pkbox{background:var(--sf2);border:1px dashed var(--ac);border-radius:12px;padding:10px 12px;margin-top:10px;line-height:1.8;font-size:14px}.rq{border-top:1px dashed var(--line);margin-top:8px;padding-top:6px}
 </style></head><body>
 <div class="wrap">
 <header><div class="mark" aria-hidden="true">ز</div><div><h1>مشروع زاد</h1><small>اطلب منتجاتك وتابع طلباتك</small></div></header>
@@ -69,7 +70,8 @@ select{font:inherit;font-size:16px;color:var(--fg);background:var(--sf2);border:
 <div class="note" style="margin:12px 0 6px">حدّد موقعك بدقة على الخريطة: اضغط زر «موقعي الحالي» أو المس الخريطة أو اسحب الدبوس.</div>
 <button type="button" class="btnl" id="locBtn">📍 موقعي الحالي</button>
 <div id="map" style="height:260px;border-radius:14px;margin-top:10px;border:1px solid var(--line);background:var(--sf2)"></div>
-<div class="note" id="locSt" style="margin:8px 0 0">لم يتم تحديد الموقع بعد.</div></div></section>
+<div class="note" id="locSt" style="margin:8px 0 0">لم يتم تحديد الموقع بعد.</div></div>
+<div id="pkbox" class="pkbox" hidden></div></section>
 <section class="card" id="pmsec" hidden><h2 class="ch">وقت الدفع</h2><div class="seg" id="pmw"><button type="button" data-pm="n">💳 أدفع الآن</button><button type="button" data-pm="l">🕒 أدفع لاحقاً</button></div><div class="note" style="margin:10px 0 0">يمكنك إرسال الطلب وتحديد موقعك الآن، والدفع في وقت لاحق من هذه الصفحة.</div></section>
 <section class="card"><h2 class="ch">بياناتك</h2><div class="grid">
 <label>الاسم<input id="fName" autocomplete="name" placeholder="اسمك"></label>
@@ -92,7 +94,7 @@ select{font:inherit;font-size:16px;color:var(--fg);background:var(--sf2);border:
 <div id="lb" hidden><img alt=""><button type="button" class="lp" aria-label="السابق">›</button><button type="button" class="ln" aria-label="التالي">‹</button><span class="lc"></span></div>
 <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
 <script>
-const D={"wa":"96877135267","at":"2026-10-24","form":{"id":"1FAIpQLSfld2hJsA-duBR-0k-AtT2JZYnz4e3kpc757RP1TwOPFUSvqg","eType":"1515076071","eMsg":"1827322959"},"cat":{"url":"https://script.google.com/macros/s/AKfycbxlFclDwoR9OLD93lBeUV4CamwKJ-QVTPxF0YA_SCkiyAAUPUOORN0aLvtmF9TPpgpKQQ/exec","t":1792835345447},"pay":{"methods":[{"n":"المختار الراشدي","d":"92980101"}],"note":"لا تنس إرفاق الإيصال"},"products":[{"id":"75yool","name":"ميدالية برقع","price":0.297,"imgs":[]},{"id":"nalwbf","name":"ميدالية برقع بالجملة","price":0.193,"imgs":[]},{"id":"f9xh05","name":"ميدالية خريطة عمان","price":0.646,"imgs":[]},{"id":"a29s8c","name":"ميدالية خريطة عمان بالجملة","price":0.452,"imgs":[]},{"id":"adup12","name":"ميدالية امرأه","price":0.612,"imgs":[]},{"id":"ftlvxi","name":"ميدالية إمرأه بالجملة","price":0.458,"imgs":[]},{"id":"dmxjkx","name":"ميدالية تولة","price":0.855,"imgs":[]},{"id":"yi0u1a","name":"ميدالية تولة بالجملة","price":0.6,"imgs":[]},{"id":"oy9na3","name":"ميدالية معلمتي","price":0.385,"imgs":[]},{"id":"fvv0j8","name":"ميدالية معلمتي بالجملة","price":0.226,"imgs":[]},{"id":"gria6u","name":"ميدالية مرية","price":0.752,"imgs":[]},{"id":"vurlwo","name":"ميدالية مرية بالجملة","price":0.452,"imgs":[]},{"id":"7om13w","name":"دله عمانية بالجملة","price":0.144,"imgs":[]}]};
+const D={"wa":"96877135267","pk":{"a":"","h":"","l":""},"at":"2026-10-24","form":{"id":"1FAIpQLSfld2hJsA-duBR-0k-AtT2JZYnz4e3kpc757RP1TwOPFUSvqg","eType":"1515076071","eMsg":"1827322959"},"cat":{"url":"https://script.google.com/macros/s/AKfycbxlFclDwoR9OLD93lBeUV4CamwKJ-QVTPxF0YA_SCkiyAAUPUOORN0aLvtmF9TPpgpKQQ/exec","t":1792836035086},"pay":{"methods":[{"n":"المختار الراشدي","d":"92980101"}],"note":"لا تنس إرفاق الإيصال"},"products":[{"id":"75yool","name":"ميدالية برقع","price":0.297,"imgs":[]},{"id":"nalwbf","name":"ميدالية برقع بالجملة","price":0.193,"imgs":[]},{"id":"f9xh05","name":"ميدالية خريطة عمان","price":0.646,"imgs":[]},{"id":"a29s8c","name":"ميدالية خريطة عمان بالجملة","price":0.452,"imgs":[]},{"id":"adup12","name":"ميدالية امرأه","price":0.612,"imgs":[]},{"id":"ftlvxi","name":"ميدالية إمرأه بالجملة","price":0.458,"imgs":[]},{"id":"dmxjkx","name":"ميدالية تولة","price":0.855,"imgs":[]},{"id":"yi0u1a","name":"ميدالية تولة بالجملة","price":0.6,"imgs":[]},{"id":"oy9na3","name":"ميدالية معلمتي","price":0.385,"imgs":[]},{"id":"fvv0j8","name":"ميدالية معلمتي بالجملة","price":0.226,"imgs":[]},{"id":"gria6u","name":"ميدالية مرية","price":0.752,"imgs":[]},{"id":"vurlwo","name":"ميدالية مرية بالجملة","price":0.452,"imgs":[]},{"id":"7om13w","name":"دله عمانية بالجملة","price":0.144,"imgs":[]}]};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>{v=parseFloat(v);return isFinite(v)?v:0};
@@ -197,10 +199,11 @@ function applyCat(c){
   const old={};D.products.forEach(p=>{old[String(p.id)]=p});
   D.products=c.items.filter(i=>i&&i.name).map(i=>({id:String(i.id),name:String(i.name),price:n(i.price),imgs:(old[String(i.id)]&&old[String(i.id)].imgs)||[]}));
   if(c.wa)D.wa=c.wa;
+  if('pk' in c){D.pk=c.pk;pkShow()}
   if(c.pay)D.pay=c.pay;
   D.ords=c.ords||{};
   Object.keys(cart).forEach(k=>{if(!D.products.some(p=>p.id===k))delete cart[k]});
-  renderList();refresh();try{renderMine();if(LO&&!document.activeElement.closest('#payc'))showPay()}catch(e){}
+  renderList();refresh();try{if(!(document.activeElement&&document.activeElement.id==='rqText'))renderMine();if(LO&&!document.activeElement.closest('#payc'))showPay()}catch(e){}
 }
 const CU=D.cat&&D.cat.url;let lastT=0;
 if(CU){
@@ -209,7 +212,7 @@ if(CU){
   pull();setInterval(pull,45000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
 }
 
-let LO=null,ORD=[];
+let LO=null,ORD=[],RQ={ref:'',kind:'',text:''};
 try{ORD=JSON.parse(localStorage.getItem('zad-ords')||'[]');if(!Array.isArray(ORD))ORD=[]}catch(e){ORD=[]}
 try{const old=JSON.parse(localStorage.getItem('zad-last')||'null');if(old&&old.ref&&!ORD.some(x=>x.ref===old.ref)){old.at=old.at||0;ORD.push(old)}}catch(e){}
 LO=ORD[0]||null;
@@ -217,6 +220,7 @@ function saveLO(){try{localStorage.setItem('zad-ords',JSON.stringify(ORD.slice(0
 function ordStatus(o){const r=(D.ords||{})[String(o.ref).toLowerCase()];if(r&&r.st==='a')return['good','✅ تم قبول طلبك وجاري تجهيزه'];if(r&&r.st==='r')return['bad','❌ لم يُقبل الطلب، تواصل معنا عبر واتساب'];return['warn','⏳ بانتظار قبول صاحب المشروع']}
 function renderMine(){
   const box=$('#mine');if(!box)return;
+  {const ta=$('#rqText');if(ta)RQ.text=ta.value}
   $('#mcnt').textContent=ORD.length?'('+ORD.length+')':'';
   if(!ORD.length){box.innerHTML='<div class="empty">لا توجد طلبات سابقة على هذا الجهاز. بعد إرسال أول طلب سيظهر هنا مع حالته.</div>';return}
   box.innerHTML=ORD.map(o=>{
@@ -224,17 +228,35 @@ function renderMine(){
     const it=(o.items||[]).map(i=>'<div class="cdet">• <bdi>'+esc(i.n)+'</bdi> × '+n(i.q)+(i.note?'<br><span style="color:var(--mut)">📝 '+esc(i.note)+'</span>':'')+'</div>').join('');
     const d=o.dl;let dh='';
     if(d){dh=d.m==='d'?'<div class="cdet">🚚 توصيل — '+[d.g,d.w,d.h].filter(Boolean).map(esc).join(' · ')+(d.lm?'<br>📌 '+esc(d.lm):'')+(isFinite(d.lat)&&d.lat!=null?'<br><a class="lk" target="_blank" rel="noopener" href="https://www.google.com/maps?q='+(+d.lat)+','+(+d.lng)+'">🗺️ عرض الموقع على الخريطة</a>':'')+'</div>':'<div class="cdet">🏪 استلام بنفسك</div>'}
+    const steps=['تم الإرسال','تم القبول','قيد التجهيز','جاهز','تم الاستلام'];
+    let ix=0;if(r.st==='a'){ix=1;if(r.s==='قيد الإنشاء')ix=2;else if(r.s==='جاهز')ix=3;else if(r.s==='مستلم')ix=4}
+    const tl=r.st==='r'?'':'<div class="tl">'+steps.map((x,k)=>'<span class="'+(k<ix?'done':k===ix?'cur':'')+'">'+(k<=ix?'✓ ':'')+x+'</span>').join('')+'</div>';
+    const rq=(o.rq||[]).map(q=>'<div class="cdet rq">'+(q.k==='c'?'🚫 طلب إلغاء':'✏️ طلب تعديل')+': '+esc(q.t)+'<br><span class="pill '+((r.eds||[]).indexOf(q.id)>=0?'good':'warn')+'">'+((r.eds||[]).indexOf(q.id)>=0?'✅ تمت معالجته':'⏳ بانتظار رد صاحب المشروع')+'</span></div>').join('');
+    const canRq=r.st!=='r'&&!(r.st==='a'&&r.s==='مستلم');
+    const rqf=RQ.ref===o.ref?'<div style="margin-top:8px"><b>'+(RQ.kind==='c'?'سبب الإلغاء':'ما الذي تريد تعديله؟')+'</b><textarea id="rqText" rows="3" placeholder="اكتب التفاصيل بوضوح">'+esc(RQ.text||'')+'</textarea><div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="btn pri sm" id="rqSend">إرسال</button><button type="button" class="btn ghost sm" id="rqCancel">إلغاء</button></div></div>':(canRq?'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button type="button" class="btn ghost sm" data-rq="e:'+esc(o.ref)+'">✏️ طلب تعديل</button><button type="button" class="btn ghost sm" data-rq="c:'+esc(o.ref)+'">🚫 طلب إلغاء</button></div>':'');
     let py='';
     if(st.confFull)py='<span class="pill good">✅ مدفوع بالكامل</span>';
     else if(st.paid>0)py='<span class="pill warn">دفعت '+omr(st.paid)+' ر.ع'+(st.conf>=st.dec?'':' (بانتظار التأكيد)')+' · المتبقي '+omr(st.rest)+' ر.ع</span>';
     else py='<span class="pill warn">'+(o.later?'🕒 الدفع لاحقاً · ':'')+'لم يُدفع بعد</span>';
     if(r.ls==='no')py+=' <span class="pill bad">❌ لم يُقبل إيصال الدفع الأخير</span>';
     const canPay=!st.full&&payMethods().length;
-    return '<div class="mine'+(LO&&LO.ref===o.ref?' sel':'')+'" data-oref="'+esc(o.ref)+'"><div><b>طلب '+esc(o.ref)+'</b> <span class="cp">'+(o.at?new Date(o.at).toLocaleString('ar-OM',{dateStyle:'short',timeStyle:'short'}):'')+'</span><div style="margin:6px 0"><span class="pill '+c+'">'+l+'</span></div>'+it+dh+'<div class="cdet" style="margin-top:6px"><b>'+omr(n(o.total))+' ر.ع</b></div><div style="margin-top:6px">'+py+'</div>'+(canPay?'<button type="button" class="btn ghost sm" data-psel="'+esc(o.ref)+'" style="margin-top:8px">'+(LO&&LO.ref===o.ref?'تفاصيل الدفع أدناه ⬇':'💳 ادفع أو أرسل إيصال')+'</button>':'')+'</div></div>'}).join('');
+    return '<div class="mine'+(LO&&LO.ref===o.ref?' sel':'')+'" data-oref="'+esc(o.ref)+'"><div><b>طلب '+esc(o.ref)+'</b> <span class="cp">'+(o.at?new Date(o.at).toLocaleString('ar-OM',{dateStyle:'short',timeStyle:'short'}):'')+'</span><div style="margin:6px 0"><span class="pill '+c+'">'+l+'</span></div>'+tl+it+dh+((d&&d.m==='p'&&pkHTML(D.pk))?'<div class="cdet pkb">'+pkHTML(D.pk)+'</div>':'')+'<div class="cdet" style="margin-top:6px"><b>'+omr(n(o.total))+' ر.ع</b></div><div style="margin-top:6px">'+py+'</div>'+(canPay?'<button type="button" class="btn ghost sm" data-psel="'+esc(o.ref)+'" style="margin-top:8px">'+(LO&&LO.ref===o.ref?'تفاصيل الدفع أدناه ⬇':'💳 ادفع أو أرسل إيصال')+'</button>':'')+rq+rqf+'</div></div>'}).join('');
 }
 function fillC(){try{const s=JSON.parse(localStorage.getItem('zad-info')||'{}'),o=ORD[0]||{};if(!$('#fCN').value)$('#fCN').value=s.name||o.name||'';if(!$('#fCP').value)$('#fCP').value=s.phone||o.phone||''}catch(e){}}
 function goPg(p){$('#pgNew').hidden=p!=='new';$('#pgMine').hidden=p!=='mine';document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.pg===p));if(p==='mine'){renderMine();fillC()}try{window.scrollTo({top:0})}catch(e){}}
 document.addEventListener('click',e=>{
+  const rb=e.target.closest('[data-rq]');if(rb){const v=rb.dataset.rq;RQ={ref:v.slice(2),kind:v[0],text:''};renderMine();const t=$('#rqText');if(t)t.focus();return}
+  if(e.target.closest('#rqCancel')){RQ={ref:'',kind:'',text:''};renderMine();return}
+  if(e.target.closest('#rqSend')){
+    const o=ORD.find(x=>x.ref===RQ.ref),t=String(($('#rqText')||{}).value||'').trim();
+    if(!o)return;if(t.length<3){toast('اكتب التفاصيل أولاً.');return}
+    if(busy){toast('انتظر لحظة ثم أعد المحاولة.');return}
+    const id=String(Date.now()),k=RQ.kind;
+    const text='*طلب تعديل - مشروع زاد*\nرقم المرجع: '+o.ref+'\nالاسم: '+(o.name||'')+'\nرقم التواصل: '+(o.phone||'')+'\nالنوع: '+(k==='c'?'إلغاء':'تعديل')+'\nمعرف: '+id+'\n\n'+t;
+    if(!F){if(waDigits(D.wa))window.open('https://wa.me/'+waDigits(D.wa)+'?text='+encodeURIComponent(text),'_blank');return}
+    busy=true;
+    postForm('edit',text).then(()=>{(o.rq=o.rq||[]).push({id,k,t});RQ={ref:'',kind:'',text:''};saveLO();renderMine();toast('تم إرسال طلبك إلى صاحب المشروع')}).catch(()=>toast('تعذر الإرسال. تأكد من الاتصال بالإنترنت.')).then(()=>{setTimeout(()=>{busy=false},1500)});
+    return}
   const tb=e.target.closest('#tabs [data-pg]');if(tb){goPg(tb.dataset.pg);return}
   const ps=e.target.closest('[data-psel]');if(ps){const o=ORD.find(x=>x.ref===ps.dataset.psel);if(o){LO=o;saveLO();showPay();renderMine();const pc=$('#payc');if(pc&&!pc.hidden)pc.scrollIntoView({behavior:'smooth',block:'start'})}}
 });
@@ -368,9 +390,11 @@ function initMap(){
     setTimeout(()=>MAP.invalidateSize(),200);
   });
 }
+function pkHTML(p){return p&&(p.a||p.l||p.h)?'<b>📍 موقع الاستلام</b>'+(p.a?'<br>'+esc(p.a):'')+(p.h?'<br>🕒 '+esc(p.h):'')+(p.l?'<br><a class="lk" target="_blank" rel="noopener" href="'+esc(p.l)+'">🗺️ فتح موقع الاستلام على الخريطة</a>':''):''}
+function pkShow(){const b=$('#pkbox');if(!b)return;const h=pkHTML(D.pk);b.hidden=!(DM==='p'&&h);if(!b.hidden)b.innerHTML=h}
 document.addEventListener('click',e=>{
   const b=e.target.closest('#dm button');
-  if(b){DM=b.dataset.m;document.querySelectorAll('#dm button').forEach(x=>x.classList.toggle('on',x===b));$('#dbox').hidden=DM!=='d';if(DM==='d')initMap();refresh();return}
+  if(b){DM=b.dataset.m;pkShow();document.querySelectorAll('#dm button').forEach(x=>x.classList.toggle('on',x===b));$('#dbox').hidden=DM!=='d';if(DM==='d')initMap();refresh();return}
   if(e.target.closest('#locBtn')){
     if(!navigator.geolocation){toast('المتصفح لا يدعم تحديد الموقع، المس الخريطة بدلاً من ذلك');return}
     $('#locSt').textContent='جاري تحديد موقعك...';

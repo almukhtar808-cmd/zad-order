@@ -66,6 +66,7 @@ select{font:inherit;font-size:16px;color:var(--fg);background:var(--sf2);border:
 <button type="button" class="btnl" id="locBtn">📍 موقعي الحالي</button>
 <div id="map" style="height:260px;border-radius:14px;margin-top:10px;border:1px solid var(--line);background:var(--sf2)"></div>
 <div class="note" id="locSt" style="margin:8px 0 0">لم يتم تحديد الموقع بعد.</div></div></section>
+<section class="card" id="pmsec" hidden><h2 class="ch">وقت الدفع</h2><div class="seg" id="pmw"><button type="button" data-pm="n">💳 أدفع الآن</button><button type="button" data-pm="l">🕒 أدفع لاحقاً</button></div><div class="note" style="margin:10px 0 0">يمكنك إرسال الطلب وتحديد موقعك الآن، والدفع في وقت لاحق من هذه الصفحة.</div></section>
 <section class="card"><h2 class="ch">بياناتك</h2><div class="grid">
 <label>الاسم<input id="fName" autocomplete="name" placeholder="اسمك"></label>
 <label>رقم التواصل<input id="fPhone" inputmode="tel" dir="ltr" autocomplete="tel" placeholder="9XXXXXXX" style="text-align:right"></label></div>
@@ -83,7 +84,7 @@ select{font:inherit;font-size:16px;color:var(--fg);background:var(--sf2);border:
 <div id="lb" hidden><img alt=""><button type="button" class="lp" aria-label="السابق">›</button><button type="button" class="ln" aria-label="التالي">‹</button><span class="lc"></span></div>
 <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
 <script>
-const D={"wa":"96877135267","at":"2026-10-24","form":{"id":"1FAIpQLSfld2hJsA-duBR-0k-AtT2JZYnz4e3kpc757RP1TwOPFUSvqg","eType":"1515076071","eMsg":"1827322959"},"cat":{"url":"https://script.google.com/macros/s/AKfycbxlFclDwoR9OLD93lBeUV4CamwKJ-QVTPxF0YA_SCkiyAAUPUOORN0aLvtmF9TPpgpKQQ/exec","t":1792833363680},"pay":{"methods":[{"n":"المختار الراشدي","d":"92980101"}],"note":"لا تنس إرفاق الإيصال"},"products":[{"id":"75yool","name":"ميدالية برقع","price":0.297,"imgs":[]},{"id":"nalwbf","name":"ميدالية برقع بالجملة","price":0.193,"imgs":[]},{"id":"f9xh05","name":"ميدالية خريطة عمان","price":0.646,"imgs":[]},{"id":"a29s8c","name":"ميدالية خريطة عمان بالجملة","price":0.452,"imgs":[]},{"id":"adup12","name":"ميدالية امرأه","price":0.612,"imgs":[]},{"id":"ftlvxi","name":"ميدالية إمرأه بالجملة","price":0.458,"imgs":[]},{"id":"dmxjkx","name":"ميدالية تولة","price":0.855,"imgs":[]},{"id":"yi0u1a","name":"ميدالية تولة بالجملة","price":0.6,"imgs":[]},{"id":"oy9na3","name":"ميدالية معلمتي","price":0.385,"imgs":[]},{"id":"fvv0j8","name":"ميدالية معلمتي بالجملة","price":0.226,"imgs":[]},{"id":"gria6u","name":"ميدالية مرية","price":0.752,"imgs":[]},{"id":"vurlwo","name":"ميدالية مرية بالجملة","price":0.452,"imgs":[]},{"id":"7om13w","name":"دله عمانية بالجملة","price":0.144,"imgs":[]}]};
+const D={"wa":"96877135267","at":"2026-10-24","form":{"id":"1FAIpQLSfld2hJsA-duBR-0k-AtT2JZYnz4e3kpc757RP1TwOPFUSvqg","eType":"1515076071","eMsg":"1827322959"},"cat":{"url":"https://script.google.com/macros/s/AKfycbxlFclDwoR9OLD93lBeUV4CamwKJ-QVTPxF0YA_SCkiyAAUPUOORN0aLvtmF9TPpgpKQQ/exec","t":1792834824198},"pay":{"methods":[{"n":"المختار الراشدي","d":"92980101"}],"note":"لا تنس إرفاق الإيصال"},"products":[{"id":"75yool","name":"ميدالية برقع","price":0.297,"imgs":[]},{"id":"nalwbf","name":"ميدالية برقع بالجملة","price":0.193,"imgs":[]},{"id":"f9xh05","name":"ميدالية خريطة عمان","price":0.646,"imgs":[]},{"id":"a29s8c","name":"ميدالية خريطة عمان بالجملة","price":0.452,"imgs":[]},{"id":"adup12","name":"ميدالية امرأه","price":0.612,"imgs":[]},{"id":"ftlvxi","name":"ميدالية إمرأه بالجملة","price":0.458,"imgs":[]},{"id":"dmxjkx","name":"ميدالية تولة","price":0.855,"imgs":[]},{"id":"yi0u1a","name":"ميدالية تولة بالجملة","price":0.6,"imgs":[]},{"id":"oy9na3","name":"ميدالية معلمتي","price":0.385,"imgs":[]},{"id":"fvv0j8","name":"ميدالية معلمتي بالجملة","price":0.226,"imgs":[]},{"id":"gria6u","name":"ميدالية مرية","price":0.752,"imgs":[]},{"id":"vurlwo","name":"ميدالية مرية بالجملة","price":0.452,"imgs":[]},{"id":"7om13w","name":"دله عمانية بالجملة","price":0.144,"imgs":[]}]};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>{v=parseFloat(v);return isFinite(v)?v:0};
@@ -94,13 +95,14 @@ const cart={},copt={};let ref=newRef(),cref=newRef(),tt=null,busy=false;const F=
 function toast(t){const e=$('#toast');e.firstChild.textContent=t;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),3200)}
 function lines(){return D.products.map(p=>({p,q:Math.max(0,Math.floor(n(cart[p.id])))})).filter(l=>l.q>0).map(l=>({p:l.p,q:l.q,sum:l.q*n(l.p.price),o:copt[l.p.id]||{note:''}}))}
 const val=id=>$('#'+id).value.trim();
-let DM='',LOC=null;
+let DM='',LOC=null,PM='';
 function issue(){
   if(!F&&!waDigits(D.wa))return 'رقم واتساب صاحب المشروع غير مضبوط.';
   if(!val('fName'))return 'اكتب اسمك.';
   if(waDigits(val('fPhone')).length<8)return 'اكتب رقم تواصل صحيح.';
   if(!lines().length)return 'اختر منتجاً واحداً على الأقل.';
   if(!DM)return 'اختر طريقة الاستلام: توصيل أو استلام بنفسي.';
+  if(payMethods().length&&!PM)return 'اختر وقت الدفع: الآن أو لاحقاً.';
   if(DM==='d'){
     if(!val('fGov'))return 'اختر المحافظة.';
     if(!val('fWil'))return 'اكتب الولاية.';
@@ -112,7 +114,7 @@ function issue(){
 function cmpMsg(){return '*شكوى - مشروع زاد*\nرقم المرجع: '+cref+'\nالاسم: '+val('fName')+'\nرقم التواصل: '+val('fPhone')+'\n\n'+val('fCmp')}
 function postForm(type,text){const b=new URLSearchParams();b.append('entry.'+F.eType,type);b.append('entry.'+F.eMsg,text+'\n#T'+Date.now()+'#');return fetch('https://docs.google.com/forms/d/e/'+F.id+'/formResponse',{method:'POST',mode:'no-cors',body:b})}
 function msg(tot){
-  const L=['*طلب جديد - مشروع زاد*','رقم المرجع: '+ref,'','الاسم: '+val('fName'),'رقم التواصل: '+val('fPhone'),'',...(DM==='d'?['الاستلام: توصيل','الدولة: '+val('fCountry'),'المحافظة: '+val('fGov'),'الولاية: '+val('fWil'),'الحارة: '+val('fHar'),...(val('fLm')?['وصف المكان: '+val('fLm')]:[]),...(LOC?['الموقع: https://www.google.com/maps?q='+LOC.lat.toFixed(6)+','+LOC.lng.toFixed(6)]:[])]:DM==='p'?['الاستلام: استلام بنفسي']:[]),'','المنتجات:'];
+  const L=['*طلب جديد - مشروع زاد*','رقم المرجع: '+ref,'','الاسم: '+val('fName'),'رقم التواصل: '+val('fPhone'),'',...(payMethods().length&&PM?['الدفع: '+(PM==='l'?'لاحقاً':'الآن')]:[]),...(DM==='d'?['الاستلام: توصيل','الدولة: '+val('fCountry'),'المحافظة: '+val('fGov'),'الولاية: '+val('fWil'),'الحارة: '+val('fHar'),...(val('fLm')?['وصف المكان: '+val('fLm')]:[]),...(LOC?['الموقع: https://www.google.com/maps?q='+LOC.lat.toFixed(6)+','+LOC.lng.toFixed(6)]:[])]:DM==='p'?['الاستلام: استلام بنفسي']:[]),'','المنتجات:'];
   lines().forEach((l,i)=>{L.push((i+1)+') '+l.p.name+' × '+l.q+' = '+omr(l.sum)+' ر.ع');const nt=String(l.o.note||'').replace(/\s+/g,' ').trim();if(nt)L.push('   ملاحظة: '+nt)});
   L.push('','*المجموع: '+omr(tot)+' ر.ع*');
   if(val('fNote'))L.push('','ملاحظات: '+val('fNote'));
@@ -155,7 +157,7 @@ function renderList(){
 renderList();
 try{const s=JSON.parse(localStorage.getItem('zad-info')||'{}');$('#fName').value=s.name||'';$('#fPhone').value=s.phone||''}catch(e){}
 function sentOrder(m){
-  LO={ref:ref,name:val('fName'),phone:val('fPhone'),total:lines().reduce((a,l)=>a+l.sum,0),declared:0};saveLO();showPay();
+  LO={ref:ref,name:val('fName'),phone:val('fPhone'),total:lines().reduce((a,l)=>a+l.sum,0),declared:0,later:PM==='l',open:false};saveLO();showPay();
   $('#done').hidden=false;$('#doneTxt').textContent='رقم المرجع: '+ref+'. سيصل طلبك إلى صاحب المشروع وسيتواصل معك. لتأكيد أسرع يمكنك إرسال نسخة عبر واتساب.';
   const w=$('#waDone');w.hidden=!waDigits(D.wa);w.href='https://wa.me/'+waDigits(D.wa)+'?text='+encodeURIComponent(m);
   Object.keys(cart).forEach(k=>delete cart[k]);Object.keys(copt).forEach(k=>delete copt[k]);renderList();$('#fNote').value='';ref=newRef();refresh();$('#done').scrollIntoView({behavior:'smooth',block:'center'});
@@ -212,6 +214,7 @@ function pstate(){
 }
 function showPay(){
   const ms=payMethods(),box=$('#payc');
+  {const sc=$('#pmsec');if(sc)sc.hidden=!ms.length}
   if(!LO||!ms.length){box.hidden=true;return}
   const st=pstate();box.hidden=false;
   let h='<h2 class="ch">الدفع · طلب '+esc(LO.ref)+'</h2>';
@@ -219,6 +222,10 @@ function showPay(){
   else if(st.o&&st.o.st==='a')h+='<p class="hint" style="color:var(--ac)">تم قبول طلبك وجاري تجهيزه.</p>';
   if(st.o&&st.o.ls==='no')h+='<div class="pstat bad">❌ لم يُقبل إيصال الدفع (رقم العملية: '+esc(st.o.lx||'')+'). لم يصلنا المبلغ أو الرقم غير صحيح. تأكد من التحويل ثم أعد التأكيد برقم العملية الصحيح، أو أرسل الإيصال عبر واتساب.</div>';
   else if(st.o&&st.o.ls==='ok')h+='<div class="pstat ok">✅ تم التحقق من إيصالك واستلام الدفعة.</div>';
+  if(LO.later&&!LO.open&&!st.full&&st.paid<=0){
+    h+='<div class="pstat part">🕒 اخترت الدفع لاحقاً. طلبك وصل لصاحب المشروع، ويمكنك الدفع في أي وقت من هذه الصفحة بنفس الجهاز.</div><button type="button" class="btn pri" id="payNow" style="margin-top:12px">أريد الدفع الآن</button>';
+    box.innerHTML=h;return;
+  }
   h+='<div class="tot"><span>إجمالي الطلب</span><b>'+omr(st.tot)+' ر.ع</b></div>';
   if(st.confFull)h+='<div class="pstat ok">✅ مدفوع بالكامل</div>';
   else if(st.full)h+='<div class="pstat ok">✅ دفعت المبلغ كاملاً ('+omr(st.dec)+' ر.ع) وبانتظار تأكيد صاحب المشروع</div>';
@@ -248,6 +255,7 @@ function payUI(){
   if(h)h.textContent=part?'اكتب المبلغ الذي ستحوّله الآن، وأقصاه '+omr(st.rest)+' ر.ع.':'سيُسجَّل المبلغ المتبقي كاملاً: '+omr(st.rest)+' ر.ع.';
 }
 document.addEventListener('change',e=>{if(e.target.name==='pt')payUI()});
+document.addEventListener('click',e=>{const pb=e.target.closest('[data-pm]');if(pb){PM=pb.dataset.pm;document.querySelectorAll('#pmw button').forEach(x=>x.classList.toggle('on',x===pb));return}if(e.target.closest('#payNow')&&LO){LO.open=true;saveLO();showPay()}});
 document.addEventListener('click',e=>{
   const pc=e.target.closest('#payConf');if(!pc||!LO)return;
   const st=pstate(),t=val('fTxn'),part=(document.querySelector('input[name=pt]:checked')||{}).value==='part';

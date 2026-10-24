@@ -33,10 +33,39 @@ input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{
 .empty{color:var(--mut);text-align:center;padding:14px 0}
 .toast{position:fixed;inset-inline:0;bottom:20px;display:flex;justify-content:center;pointer-events:none;padding:0 16px}
 .toast span{background:var(--fg);color:var(--bg);padding:11px 20px;border-radius:99px;opacity:0;transition:opacity .3s}.toast.show span{opacity:1}
+.prow{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--sf2);cursor:pointer}
+.pstat{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.7}.pstat.ok{background:var(--acs);color:var(--ac);font-weight:600}.pstat.bad{background:rgba(214,69,69,.13);color:#b3261e;font-weight:600}.pstat.part{background:rgba(224,161,0,.15);color:#a07200}
+
+.row{flex-wrap:wrap}.row img.zimg{width:84px;height:84px;border-radius:14px;object-fit:cover;flex:none;cursor:zoom-in}
+.opts{flex:0 0 100%;display:grid;gap:8px;padding-top:6px;border-top:1px dashed var(--line)}
+.opts .lb{font-size:13px;color:var(--mut)}.cols{display:flex;flex-wrap:wrap;gap:8px}
+.cchip{border:1px solid var(--line);background:var(--sf);color:var(--fg);border-radius:99px;padding:7px 14px;font:500 14px var(--fb);cursor:pointer;min-height:38px}
+.cchip.on{background:var(--ac);color:var(--acf);border-color:var(--ac)}
+.pnote{min-height:48px}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.82);display:grid;place-items:center;z-index:60;padding:16px}#lb img{max-width:94vw;max-height:86vh;border-radius:14px}
+
+.gal{flex:0 0 100%;display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x proximity}.gal .zimg{width:120px;height:120px;scroll-snap-align:start}
+#lb button{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;font-size:30px;line-height:1;cursor:pointer}#lb .lp{right:10px}#lb .ln{left:10px}#lb .lc{position:absolute;bottom:14px;color:#fff;font-size:14px}
+
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg button{font:inherit;font-size:15px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--sf2);color:var(--fg);cursor:pointer}.seg button.on{border-color:var(--ac);background:var(--acs);font-weight:600}
+select{font:inherit;font-size:16px;color:var(--fg);background:var(--sf2);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+.btnl{font:inherit;font-size:14px;padding:10px 14px;border-radius:12px;border:1px solid var(--ac);background:transparent;color:var(--ac);cursor:pointer}
 </style></head><body>
 <div class="wrap">
 <header><div class="mark" aria-hidden="true">ز</div><div><h1>مشروع زاد</h1><small>اطلب منتجاتك وأرسلها مباشرة عبر واتساب</small></div></header>
 <section class="card"><h2 class="ch">اختر المنتجات</h2><div class="list" id="list"></div></section>
+<section class="card"><h2 class="ch">طريقة الاستلام</h2>
+<div class="seg" id="dm"><button type="button" data-m="d">🚚 توصيل</button><button type="button" data-m="p">🏪 استلام بنفسي</button></div>
+<div id="dbox" hidden>
+<div class="grid" style="margin-top:12px"><label>الدولة<input id="fCountry" value="سلطنة عُمان" readonly></label>
+<label>المحافظة<select id="fGov"><option value="">اختر المحافظة</option><option>مسقط</option><option>ظفار</option><option>مسندم</option><option>البريمي</option><option>الداخلية</option><option>شمال الباطنة</option><option>جنوب الباطنة</option><option>شمال الشرقية</option><option>جنوب الشرقية</option><option>الظاهرة</option><option>الوسطى</option></select></label>
+<label>الولاية<input id="fWil" placeholder="مثال: بوشر"></label>
+<label>الحارة / المنطقة<input id="fHar" placeholder="مثال: الحارة الثالثة"></label></div>
+<label style="margin-top:12px">وصف المكان (اختياري)<input id="fLm" placeholder="مثال: بجانب المسجد، بيت رقم ..."></label>
+<div class="note" style="margin:12px 0 6px">حدّد موقعك بدقة على الخريطة: اضغط زر «موقعي الحالي» أو المس الخريطة أو اسحب الدبوس.</div>
+<button type="button" class="btnl" id="locBtn">📍 موقعي الحالي</button>
+<div id="map" style="height:260px;border-radius:14px;margin-top:10px;border:1px solid var(--line);background:var(--sf2)"></div>
+<div class="note" id="locSt" style="margin:8px 0 0">لم يتم تحديد الموقع بعد.</div></div></section>
 <section class="card"><h2 class="ch">بياناتك</h2><div class="grid">
 <label>الاسم<input id="fName" autocomplete="name" placeholder="اسمك"></label>
 <label>رقم التواصل<input id="fPhone" inputmode="tel" dir="ltr" autocomplete="tel" placeholder="9XXXXXXX" style="text-align:right"></label></div>
@@ -45,36 +74,46 @@ input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{
 <button type="button" class="btn pri" id="sendF" hidden>إرسال الطلب</button>
 <a class="btn dis" id="send" target="_blank" rel="noopener noreferrer" href="#" aria-disabled="true">إرسال الطلب عبر واتساب</a><p class="hint" id="hint"></p></section>
 <section class="card done" id="done" hidden><b>تم إرسال طلبك</b><p class="hint" id="doneTxt"></p><a class="btn ghost" id="waDone" target="_blank" rel="noopener noreferrer" href="#" style="margin-top:10px">أرسل نسخة عبر واتساب (اختياري)</a></section>
+<section class="card" id="payc" hidden></section>
 <section class="card"><h2 class="ch">تقديم شكوى</h2>
 <label>نص الشكوى<textarea id="fCmp" rows="3" placeholder="اكتب شكواك أو ملاحظتك، وسنتواصل معك على الرقم المكتوب في خانة بياناتك"></textarea></label>
 <button type="button" class="btn pri" id="sendCF" style="margin-top:12px" hidden>إرسال الشكوى</button>
 <a class="btn ghost" id="sendC" target="_blank" rel="noopener noreferrer" href="#" aria-disabled="true" style="margin-top:12px">إرسال الشكوى عبر واتساب</a></section>
 </div>
+<div id="lb" hidden><img alt=""><button type="button" class="lp" aria-label="السابق">›</button><button type="button" class="ln" aria-label="التالي">‹</button><span class="lc"></span></div>
 <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
 <script>
-const D={"wa":"96877135267","at":"2026-10-23","form":{"id":"1FAIpQLSfld2hJsA-duBR-0k-AtT2JZYnz4e3kpc757RP1TwOPFUSvqg","eType":"1515076071","eMsg":"1827322959"},"cat":{"url":"https://script.google.com/macros/s/AKfycbxlFclDwoR9OLD93lBeUV4CamwKJ-QVTPxF0YA_SCkiyAAUPUOORN0aLvtmF9TPpgpKQQ/exec","t":1792776444512},"products":[{"id":"75yool","name":"ميدالية برقع","price":0.297,"img":""},{"id":"nalwbf","name":"ميدالية برقع بالجملة","price":0.193,"img":""},{"id":"f9xh05","name":"ميدالية خريطة عمان","price":0.646,"img":""},{"id":"a29s8c","name":"ميدالية خريطة عمان بالجملة","price":0.452,"img":""},{"id":"adup12","name":"ميدالية امرأه","price":0.612,"img":""},{"id":"ftlvxi","name":"ميدالية إمرأه بالجملة","price":0.458,"img":""},{"id":"dmxjkx","name":"ميدالية تولة","price":0.855,"img":""},{"id":"yi0u1a","name":"ميدالية تولة بالجملة","price":0.6,"img":""},{"id":"oy9na3","name":"ميدالية معلمتي","price":0.385,"img":""},{"id":"fvv0j8","name":"ميدالية معلمتي بالجملة","price":0.226,"img":""},{"id":"gria6u","name":"ميدالية مرية","price":0.752,"img":""},{"id":"vurlwo","name":"ميدالية مرية بالجملة","price":0.452,"img":""},{"id":"7om13w","name":"دله عمانية بالجملة","price":0.144,"img":""}]};
+const D={"wa":"96877135267","at":"2026-10-24","form":{"id":"1FAIpQLSfld2hJsA-duBR-0k-AtT2JZYnz4e3kpc757RP1TwOPFUSvqg","eType":"1515076071","eMsg":"1827322959"},"cat":{"url":"https://script.google.com/macros/s/AKfycbxlFclDwoR9OLD93lBeUV4CamwKJ-QVTPxF0YA_SCkiyAAUPUOORN0aLvtmF9TPpgpKQQ/exec","t":1792833363680},"pay":{"methods":[{"n":"المختار الراشدي","d":"92980101"}],"note":"لا تنس إرفاق الإيصال"},"products":[{"id":"75yool","name":"ميدالية برقع","price":0.297,"imgs":[]},{"id":"nalwbf","name":"ميدالية برقع بالجملة","price":0.193,"imgs":[]},{"id":"f9xh05","name":"ميدالية خريطة عمان","price":0.646,"imgs":[]},{"id":"a29s8c","name":"ميدالية خريطة عمان بالجملة","price":0.452,"imgs":[]},{"id":"adup12","name":"ميدالية امرأه","price":0.612,"imgs":[]},{"id":"ftlvxi","name":"ميدالية إمرأه بالجملة","price":0.458,"imgs":[]},{"id":"dmxjkx","name":"ميدالية تولة","price":0.855,"imgs":[]},{"id":"yi0u1a","name":"ميدالية تولة بالجملة","price":0.6,"imgs":[]},{"id":"oy9na3","name":"ميدالية معلمتي","price":0.385,"imgs":[]},{"id":"fvv0j8","name":"ميدالية معلمتي بالجملة","price":0.226,"imgs":[]},{"id":"gria6u","name":"ميدالية مرية","price":0.752,"imgs":[]},{"id":"vurlwo","name":"ميدالية مرية بالجملة","price":0.452,"imgs":[]},{"id":"7om13w","name":"دله عمانية بالجملة","price":0.144,"imgs":[]}]};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>{v=parseFloat(v);return isFinite(v)?v:0};
 const omr=v=>n(v).toFixed(3);
 function waDigits(v){let d=String(v||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.length===8)d='968'+d;return d}
 const newRef=()=>(Math.random().toString(36)+'00000').slice(2,7).toUpperCase();
-const cart={};let ref=newRef(),cref=newRef(),tt=null,busy=false;const F=D.form&&D.form.id?D.form:null;
+const cart={},copt={};let ref=newRef(),cref=newRef(),tt=null,busy=false;const F=D.form&&D.form.id?D.form:null;
 function toast(t){const e=$('#toast');e.firstChild.textContent=t;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),3200)}
-function lines(){return D.products.map(p=>({p,q:Math.max(0,Math.floor(n(cart[p.id])))})).filter(l=>l.q>0).map(l=>({p:l.p,q:l.q,sum:l.q*n(l.p.price)}))}
+function lines(){return D.products.map(p=>({p,q:Math.max(0,Math.floor(n(cart[p.id])))})).filter(l=>l.q>0).map(l=>({p:l.p,q:l.q,sum:l.q*n(l.p.price),o:copt[l.p.id]||{note:''}}))}
 const val=id=>$('#'+id).value.trim();
+let DM='',LOC=null;
 function issue(){
   if(!F&&!waDigits(D.wa))return 'رقم واتساب صاحب المشروع غير مضبوط.';
   if(!val('fName'))return 'اكتب اسمك.';
   if(waDigits(val('fPhone')).length<8)return 'اكتب رقم تواصل صحيح.';
   if(!lines().length)return 'اختر منتجاً واحداً على الأقل.';
+  if(!DM)return 'اختر طريقة الاستلام: توصيل أو استلام بنفسي.';
+  if(DM==='d'){
+    if(!val('fGov'))return 'اختر المحافظة.';
+    if(!val('fWil'))return 'اكتب الولاية.';
+    if(!val('fHar'))return 'اكتب الحارة أو المنطقة.';
+    if(!LOC&&!val('fLm'))return 'حدّد موقعك على الخريطة أو اكتب وصفاً دقيقاً للمكان.';
+  }
   return '';
 }
 function cmpMsg(){return '*شكوى - مشروع زاد*\nرقم المرجع: '+cref+'\nالاسم: '+val('fName')+'\nرقم التواصل: '+val('fPhone')+'\n\n'+val('fCmp')}
 function postForm(type,text){const b=new URLSearchParams();b.append('entry.'+F.eType,type);b.append('entry.'+F.eMsg,text+'\n#T'+Date.now()+'#');return fetch('https://docs.google.com/forms/d/e/'+F.id+'/formResponse',{method:'POST',mode:'no-cors',body:b})}
 function msg(tot){
-  const L=['*طلب جديد - مشروع زاد*','رقم المرجع: '+ref,'','الاسم: '+val('fName'),'رقم التواصل: '+val('fPhone'),'','المنتجات:'];
-  lines().forEach((l,i)=>L.push((i+1)+') '+l.p.name+' × '+l.q+' = '+omr(l.sum)+' ر.ع'));
+  const L=['*طلب جديد - مشروع زاد*','رقم المرجع: '+ref,'','الاسم: '+val('fName'),'رقم التواصل: '+val('fPhone'),'',...(DM==='d'?['الاستلام: توصيل','الدولة: '+val('fCountry'),'المحافظة: '+val('fGov'),'الولاية: '+val('fWil'),'الحارة: '+val('fHar'),...(val('fLm')?['وصف المكان: '+val('fLm')]:[]),...(LOC?['الموقع: https://www.google.com/maps?q='+LOC.lat.toFixed(6)+','+LOC.lng.toFixed(6)]:[])]:DM==='p'?['الاستلام: استلام بنفسي']:[]),'','المنتجات:'];
+  lines().forEach((l,i)=>{L.push((i+1)+') '+l.p.name+' × '+l.q+' = '+omr(l.sum)+' ر.ع');const nt=String(l.o.note||'').replace(/\s+/g,' ').trim();if(nt)L.push('   ملاحظة: '+nt)});
   L.push('','*المجموع: '+omr(tot)+' ر.ع*');
   if(val('fNote'))L.push('','ملاحظات: '+val('fNote'));
   return L.join('\n');
@@ -88,7 +127,7 @@ function cmpIssue(){
 }
 function refresh(){
   const ls=lines(),tot=ls.reduce((a,l)=>a+l.sum,0);
-  document.querySelectorAll('.row').forEach(r=>{const q=Math.max(0,Math.floor(n(cart[r.dataset.id])));r.querySelector('output').textContent=q;r.classList.toggle('on',q>0)});
+  document.querySelectorAll('.row').forEach(r=>{const q=Math.max(0,Math.floor(n(cart[r.dataset.id])));r.querySelector('output').textContent=q;r.classList.toggle('on',q>0);const op=r.querySelector('.opts');if(op)op.hidden=!(q>0)});
   $('#tot').textContent=omr(tot)+' ر.ع';
   $('#det').textContent=ls.map(l=>l.p.name+' × '+l.q).join(' • ');
   const bad=issue(),a=$('#send');
@@ -101,13 +140,25 @@ function refresh(){
   c.href=cb?'#':'https://wa.me/'+waDigits(D.wa)+'?text='+encodeURIComponent(cmpMsg());
   try{localStorage.setItem('zad-info',JSON.stringify({name:val('fName'),phone:val('fPhone')}))}catch(e){}
 }
-function renderList(){$('#list').innerHTML=D.products.length?D.products.map(p=>'<div class="row" data-id="'+esc(p.id)+'">'+(p.img?'<img src="'+esc(p.img)+'" alt="">':'')+'<div class="nm"><b>'+esc(p.name)+'</b><span class="pr">'+omr(p.price)+' ر.ع</span></div><div class="step"><button type="button" data-q="-1" aria-label="إنقاص">−</button><output>0</output><button type="button" data-q="1" aria-label="زيادة">+</button></div></div>').join(''):'<div class="empty">لا توجد منتجات متاحة للطلب حالياً.</div>';}
+function pimgsOf(p){return (p.imgs&&p.imgs.length)?p.imgs:(p.img?[p.img]:[])}
+function renderList(){
+  $('#list').innerHTML=D.products.length?D.products.map(p=>{
+    const im=pimgsOf(p);
+    return '<div class="row" data-id="'+esc(p.id)+'">'+(im.length?'<div class="gal">'+im.map((u,i)=>'<img class="zimg" data-zoom="'+i+'" src="'+esc(u)+'" alt="'+esc(p.name)+'">').join('')+'</div>':'')+'<div class="nm"><b>'+esc(p.name)+'</b><span class="pr">'+omr(p.price)+' ر.ع</span></div><div class="step"><button type="button" data-q="-1" aria-label="إنقاص">−</button><output>0</output><button type="button" data-q="1" aria-label="زيادة">+</button></div>'+
+      '<div class="opts" hidden><textarea class="pnote" rows="2" placeholder="ملاحظة لهذا المنتج (مثال: الاسم المراد كتابته)"></textarea></div></div>';
+  }).join(''):'<div class="empty">لا توجد منتجات متاحة للطلب حالياً.</div>';
+  document.querySelectorAll('#list .row').forEach(r=>{
+    const o=copt[r.dataset.id];if(!o)return;
+    const t=r.querySelector('.pnote');if(t)t.value=o.note||'';
+  });
+}
 renderList();
 try{const s=JSON.parse(localStorage.getItem('zad-info')||'{}');$('#fName').value=s.name||'';$('#fPhone').value=s.phone||''}catch(e){}
 function sentOrder(m){
+  LO={ref:ref,name:val('fName'),phone:val('fPhone'),total:lines().reduce((a,l)=>a+l.sum,0),declared:0};saveLO();showPay();
   $('#done').hidden=false;$('#doneTxt').textContent='رقم المرجع: '+ref+'. سيصل طلبك إلى صاحب المشروع وسيتواصل معك. لتأكيد أسرع يمكنك إرسال نسخة عبر واتساب.';
   const w=$('#waDone');w.hidden=!waDigits(D.wa);w.href='https://wa.me/'+waDigits(D.wa)+'?text='+encodeURIComponent(m);
-  Object.keys(cart).forEach(k=>delete cart[k]);$('#fNote').value='';ref=newRef();refresh();$('#done').scrollIntoView({behavior:'smooth',block:'center'});
+  Object.keys(cart).forEach(k=>delete cart[k]);Object.keys(copt).forEach(k=>delete copt[k]);renderList();$('#fNote').value='';ref=newRef();refresh();$('#done').scrollIntoView({behavior:'smooth',block:'center'});
 }
 document.addEventListener('click',e=>{
   const sf=e.target.closest('#sendF,#sendCF');
@@ -125,7 +176,7 @@ document.addEventListener('click',e=>{
   const a=e.target.closest('#send,#sendC');
   if(!a)return;
   if(a.getAttribute('aria-disabled')==='true'){e.preventDefault();const m=a.id==='send'?issue():cmpIssue();if(m)toast(m);return}
-  if(a.id==='send')setTimeout(()=>{toast('اضغط إرسال في واتساب لإتمام طلبك');Object.keys(cart).forEach(k=>delete cart[k]);$('#fNote').value='';ref=newRef();refresh()},500);
+  if(a.id==='send')setTimeout(()=>{toast('اضغط إرسال في واتساب لإتمام طلبك');Object.keys(cart).forEach(k=>delete cart[k]);Object.keys(copt).forEach(k=>delete copt[k]);renderList();$('#fNote').value='';ref=newRef();refresh()},500);
   else setTimeout(()=>{toast('اضغط إرسال في واتساب لإتمام شكواك');$('#fCmp').value='';refresh()},500);
 });
 document.addEventListener('input',refresh);
@@ -134,10 +185,12 @@ refresh();
 function applyCat(c){
   if(!c||!Array.isArray(c.items)||!(c.t>0))return;
   const old={};D.products.forEach(p=>{old[String(p.id)]=p});
-  D.products=c.items.filter(i=>i&&i.name).map(i=>({id:String(i.id),name:String(i.name),price:n(i.price),img:(old[String(i.id)]&&old[String(i.id)].img)||''}));
+  D.products=c.items.filter(i=>i&&i.name).map(i=>({id:String(i.id),name:String(i.name),price:n(i.price),imgs:(old[String(i.id)]&&old[String(i.id)].imgs)||[]}));
   if(c.wa)D.wa=c.wa;
+  if(c.pay)D.pay=c.pay;
+  D.ords=c.ords||{};
   Object.keys(cart).forEach(k=>{if(!D.products.some(p=>p.id===k))delete cart[k]});
-  renderList();refresh();
+  renderList();refresh();try{if(LO&&!document.activeElement.closest('#payc'))showPay()}catch(e){}
 }
 const CU=D.cat&&D.cat.url;let lastT=0;
 if(CU){
@@ -145,4 +198,142 @@ if(CU){
   const pull=()=>fetch(CU+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(c=>{if(c&&c.t>0&&c.t!==lastT){lastT=c.t;try{localStorage.setItem('zad-cat',JSON.stringify(c))}catch(e){}applyCat(c)}}).catch(()=>{});
   pull();setInterval(pull,45000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
 }
+
+let LO=null;
+try{LO=JSON.parse(localStorage.getItem('zad-last')||'null')}catch(e){}
+function saveLO(){try{localStorage.setItem('zad-last',JSON.stringify(LO))}catch(e){}}
+function shrinkRc(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{try{const k=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',0.72).split(',')[1])}catch(e){rej(e)}};im.onerror=rej;im.src=u})}
+function payMethods(){return (D.pay&&D.pay.methods)||[]}
+function waRcpt(){return waDigits(D.wa)&&LO?'https://wa.me/'+waDigits(D.wa)+'?text='+encodeURIComponent('إيصال الدفع للطلب '+LO.ref+' - '+LO.name):''}
+function pstate(){
+  const o=(D.ords||{})[String(LO.ref).toLowerCase()]||null;
+  const conf=o&&o.st==='a'?n(o.p):0,dec=Math.max(0,Math.round((n(LO.declared)-(o?n(o.ra):0))*1000)/1000),paid=Math.max(conf,dec),tot=n(LO.total);
+  return {o,conf,dec,paid,rest:Math.max(0,Math.round((tot-paid)*1000)/1000),tot,full:paid>=tot-0.0005&&tot>0,confFull:conf>=tot-0.0005&&tot>0};
+}
+function showPay(){
+  const ms=payMethods(),box=$('#payc');
+  if(!LO||!ms.length){box.hidden=true;return}
+  const st=pstate();box.hidden=false;
+  let h='<h2 class="ch">الدفع · طلب '+esc(LO.ref)+'</h2>';
+  if(st.o&&st.o.st==='r')h+='<p class="hint" style="color:var(--bad)">لم يُقبل هذا الطلب. تواصل مع صاحب المشروع.</p>';
+  else if(st.o&&st.o.st==='a')h+='<p class="hint" style="color:var(--ac)">تم قبول طلبك وجاري تجهيزه.</p>';
+  if(st.o&&st.o.ls==='no')h+='<div class="pstat bad">❌ لم يُقبل إيصال الدفع (رقم العملية: '+esc(st.o.lx||'')+'). لم يصلنا المبلغ أو الرقم غير صحيح. تأكد من التحويل ثم أعد التأكيد برقم العملية الصحيح، أو أرسل الإيصال عبر واتساب.</div>';
+  else if(st.o&&st.o.ls==='ok')h+='<div class="pstat ok">✅ تم التحقق من إيصالك واستلام الدفعة.</div>';
+  h+='<div class="tot"><span>إجمالي الطلب</span><b>'+omr(st.tot)+' ر.ع</b></div>';
+  if(st.confFull)h+='<div class="pstat ok">✅ مدفوع بالكامل</div>';
+  else if(st.full)h+='<div class="pstat ok">✅ دفعت المبلغ كاملاً ('+omr(st.dec)+' ر.ع) وبانتظار تأكيد صاحب المشروع</div>';
+  else if(st.paid>0)h+='<div class="pstat part">دفعة جزئية: دفعت '+omr(st.paid)+' ر.ع'+(st.conf>=st.dec?' (مؤكدة)':' (بانتظار التأكيد)')+'<br>المتبقي عليك: <b>'+omr(st.rest)+' ر.ع</b></div>';
+  if(!st.full){
+    h+=(D.pay.note?'<p class="hint">'+esc(D.pay.note)+'</p>':'')+
+    '<div class="list" style="margin-top:10px">'+ms.map((x,i)=>'<label class="prow"><span class="nm"><b>'+esc(x.n)+'</b><span class="pr" style="white-space:pre-wrap;user-select:all">'+esc(x.d)+'</span></span><input type="radio" name="pm" value="'+i+'" style="width:22px;height:22px;padding:0"'+(i===0?' checked':'')+'></label>').join('')+'</div>'+
+    '<div class="list" style="margin-top:10px"><label class="prow"><span class="nm"><b>دفع المبلغ كاملاً</b><span class="pr">'+omr(st.rest)+' ر.ع</span></span><input type="radio" name="pt" value="full" checked style="width:22px;height:22px;padding:0"></label>'+
+    '<label class="prow"><span class="nm"><b>دفع جزء من المبلغ</b><span class="pr">وتدفع الباقي لاحقاً</span></span><input type="radio" name="pt" value="part" style="width:22px;height:22px;padding:0"></label></div>'+
+    '<label id="amtw" hidden style="margin-top:10px">المبلغ الذي حوّلته (ر.ع)<input id="fAmt" inputmode="decimal" dir="ltr" style="text-align:right" placeholder="مثال: 1.500"></label>'+
+    '<p class="hint" id="amtHint"></p>'+
+    '<p class="hint">حوّل المبلغ ثم اكتب رقم العملية أو اسم المحوِّل واضغط تأكيد التحويل.</p>'+
+    '<label>رقم العملية أو اسم المحوِّل<input id="fTxn" placeholder="مثال: رقم المرجع في إشعار البنك"></label>'+
+    (CU?'<label style="margin-top:10px">صورة الإيصال (اختياري، يسرّع التحقق)<input id="fRcpt" type="file" accept="image/*" style="padding:8px"></label>':'')+
+    (F?'<button type="button" class="btn pri" id="payConf" style="margin-top:12px">تأكيد التحويل</button>':'');
+  }
+  if(waRcpt())h+='<a class="btn ghost" target="_blank" rel="noopener noreferrer" style="margin-top:10px" href="'+waRcpt()+'">إرسال إيصال التحويل عبر واتساب</a>';
+  const keep=document.activeElement&&document.activeElement.id;
+  box.innerHTML=h;
+  if(keep&&$('#'+keep)&&$('#'+keep).tagName==='INPUT'&&false)$('#'+keep).focus();
+  payUI();
+}
+function payUI(){
+  const r=document.querySelector('input[name=pt]:checked');if(!r)return;
+  const part=r.value==='part',w=$('#amtw');if(w)w.hidden=!part;
+  const st=pstate(),h=$('#amtHint');
+  if(h)h.textContent=part?'اكتب المبلغ الذي ستحوّله الآن، وأقصاه '+omr(st.rest)+' ر.ع.':'سيُسجَّل المبلغ المتبقي كاملاً: '+omr(st.rest)+' ر.ع.';
+}
+document.addEventListener('change',e=>{if(e.target.name==='pt')payUI()});
+document.addEventListener('click',e=>{
+  const pc=e.target.closest('#payConf');if(!pc||!LO)return;
+  const st=pstate(),t=val('fTxn'),part=(document.querySelector('input[name=pt]:checked')||{}).value==='part';
+  let amt=st.rest;
+  if(part){amt=n(String(val('fAmt')).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/,/g,'.'));
+    if(!(amt>0)){toast('اكتب المبلغ الذي حوّلته.');return}
+    if(amt>st.rest+0.0005){toast('المبلغ أكبر من المتبقي ('+omr(st.rest)+' ر.ع).');return}}
+  amt=Math.round(amt*1000)/1000;
+  if(!(amt>0)){toast('لا يوجد مبلغ متبقٍ.');return}
+  if(t.length<3){toast('اكتب رقم العملية أو اسم المحوِّل.');return}
+  if(busy){toast('انتظر لحظة ثم أعد المحاولة.');return}
+  const ms=payMethods(),r=document.querySelector('input[name=pm]:checked'),x=ms[r?+r.value:0]||{n:''};
+  const isFull=amt>=st.rest-0.0005;
+  const text='*تأكيد دفع - مشروع زاد*\nرقم المرجع: '+LO.ref+'\nالاسم: '+LO.name+'\nرقم التواصل: '+LO.phone+'\nنوع الدفع: '+(isFull?'كامل':'جزئي')+'\nالمبلغ: '+omr(amt)+' ر.ع\nإجمالي الطلب: '+omr(st.tot)+' ر.ع\nالمتبقي: '+omr(Math.max(0,st.rest-amt))+' ر.ع\nطريقة الدفع: '+x.n+'\nرقم العملية: '+t;
+  busy=true;
+  const rf=$('#fRcpt')&&$('#fRcpt').files&&$('#fRcpt').files[0];
+  const upl=rf&&CU?(toast('جاري رفع صورة الإيصال...'),shrinkRc(rf).then(b64=>fetch(CU,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({k:'rcpt',ref:LO.ref,data:b64})}).then(r=>r.json()).then(j=>{if(!j||!j.ok||!j.id)throw 0;return 'https://drive.google.com/file/d/'+j.id+'/view'}))
+    .catch(()=>{toast('تعذر رفع الصورة. سيصل التأكيد بدونها، يمكنك إرسالها عبر واتساب.');return ''})):Promise.resolve('');
+  upl.then(link=>postForm('payment',link?text.replace('\nرقم العملية: ','\nصورة الإيصال: '+link+'\nرقم العملية: '):text)).then(()=>{
+    LO.declared=Math.round((n(LO.declared)+amt)*1000)/1000;saveLO();showPay();
+    toast(isFull?'تم إرسال تأكيد الدفع الكامل':'تم إرسال الدفعة. المتبقي '+omr(Math.max(0,st.rest-amt))+' ر.ع');
+  }).catch(()=>toast('تعذر الإرسال. تأكد من الاتصال بالإنترنت، أو أرسل الإيصال عبر واتساب.')).then(()=>{setTimeout(()=>{busy=false},2000)});
+});
+showPay();
+
+let LBL=[],LBI=0;
+function lbShow(){const lb=$('#lb');lb.querySelector('img').src=LBL[LBI];lb.querySelector('.lc').textContent=(LBI+1)+' / '+LBL.length;lb.querySelector('.lp').hidden=LBL.length<2;lb.querySelector('.ln').hidden=LBL.length<2;lb.hidden=false}
+document.addEventListener('click',e=>{
+  const z=e.target.closest('[data-zoom]');
+  if(z){const p=D.products.find(x=>String(x.id)===z.closest('.row').dataset.id);LBL=p?pimgsOf(p):[z.src];LBI=Math.max(0,Math.min(LBL.length-1,+z.dataset.zoom||0));lbShow();return}
+  if(e.target.closest('.lp')){LBI=(LBI-1+LBL.length)%LBL.length;lbShow();return}
+  if(e.target.closest('.ln')){LBI=(LBI+1)%LBL.length;lbShow();return}
+  if(e.target.closest('#lb')){$('#lb').hidden=true}
+});
+let tx0=null;
+document.addEventListener('touchstart',e=>{if(!$('#lb').hidden)tx0=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if($('#lb').hidden||tx0===null)return;const dx=e.changedTouches[0].clientX-tx0;tx0=null;if(Math.abs(dx)>50&&LBL.length>1){LBI=(LBI+(dx<0?1:-1)+LBL.length)%LBL.length;lbShow()}},{passive:true});
+document.addEventListener('input',e=>{
+  const t=e.target.closest&&e.target.closest('.pnote');
+  if(t){const id=t.closest('.row').dataset.id,o=copt[id]||(copt[id]={note:''});o.note=t.value;refresh()}
+});
+
+/* ---- delivery / map ---- */
+let MAP=null,MK=null,LL=null;
+function locSet(lat,lng,fly){
+  LOC={lat:+lat,lng:+lng};
+  $('#locSt').textContent='تم تحديد الموقع ✓ ('+LOC.lat.toFixed(5)+', '+LOC.lng.toFixed(5)+')';
+  if(MAP&&MK){MK.setLatLng([lat,lng]);if(fly)MAP.setView([lat,lng],16)}
+  else if(MAP&&LL){MK=LL.marker([lat,lng],{draggable:true}).addTo(MAP);MK.on('dragend',()=>{const p=MK.getLatLng();locSet(p.lat,p.lng,false)});if(fly)MAP.setView([lat,lng],16)}
+  geoFill(lat,lng);refresh();
+}
+function geoFill(lat,lng){
+  try{fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&accept-language=ar&zoom=16&lat='+lat+'&lon='+lng).then(r=>r.json()).then(j=>{
+    const a=(j&&j.address)||{};
+    const st=String(a.state||a.region||'').replace(/محافظة/g,'').trim();
+    const sel=$('#fGov');if(st&&!sel.value){const o=[...sel.options].find(x=>x.value&&(st.indexOf(x.value)>=0||x.value.indexOf(st)>=0));if(o)sel.value=o.value}
+    const w=a.county||a.city||a.town||a.municipality||'';if(w&&!$('#fWil').value)$('#fWil').value=String(w).replace(/ولاية/g,'').trim();
+    const h=a.suburb||a.neighbourhood||a.village||a.quarter||'';if(h&&!$('#fHar').value)$('#fHar').value=h;
+    refresh();
+  }).catch(()=>{})}catch(e){}
+}
+function loadLeaflet(cb){
+  if(window.L)return cb();
+  const l=document.createElement('link');l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l);
+  const sc=document.createElement('script');sc.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';sc.onload=cb;sc.onerror=()=>{$('#map').innerHTML='<div class="note" style="padding:14px">تعذر تحميل الخريطة. استخدم زر «موقعي الحالي» أو اكتب وصف المكان.</div>'};document.head.appendChild(sc);
+}
+function initMap(){
+  if(MAP||!$('#map'))return;
+  loadLeaflet(()=>{
+    if(!window.L||MAP)return;LL=window.L;
+    MAP=LL.map('map').setView(LOC?[LOC.lat,LOC.lng]:[23.588,58.383],LOC?16:8);
+    LL.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(MAP);
+    MAP.on('click',e=>locSet(e.latlng.lat,e.latlng.lng,false));
+    if(LOC)locSet(LOC.lat,LOC.lng,true);
+    setTimeout(()=>MAP.invalidateSize(),200);
+  });
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('#dm button');
+  if(b){DM=b.dataset.m;document.querySelectorAll('#dm button').forEach(x=>x.classList.toggle('on',x===b));$('#dbox').hidden=DM!=='d';if(DM==='d')initMap();refresh();return}
+  if(e.target.closest('#locBtn')){
+    if(!navigator.geolocation){toast('المتصفح لا يدعم تحديد الموقع، المس الخريطة بدلاً من ذلك');return}
+    $('#locSt').textContent='جاري تحديد موقعك...';
+    navigator.geolocation.getCurrentPosition(p=>locSet(p.coords.latitude,p.coords.longitude,true),()=>{$('#locSt').textContent=LOC?'':'تعذر تحديد موقعك تلقائياً. المس الخريطة لتحديده.';toast('اسمح للمتصفح بالوصول لموقعك أو المس الخريطة')},{enableHighAccuracy:true,timeout:15000});
+  }
+});
+document.addEventListener('input',e=>{if(e.target.closest&&e.target.closest('#dbox'))refresh()});
+document.addEventListener('change',e=>{if(e.target.closest&&e.target.closest('#dbox'))refresh()});
 </script></body></html>

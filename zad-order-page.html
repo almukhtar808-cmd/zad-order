@@ -50,9 +50,13 @@ input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg button{font:inherit;font-size:15px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--sf2);color:var(--fg);cursor:pointer}.seg button.on{border-color:var(--ac);background:var(--acs);font-weight:600}
 select{font:inherit;font-size:16px;color:var(--fg);background:var(--sf2);border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
 .btnl{font:inherit;font-size:14px;padding:10px 14px;border-radius:12px;border:1px solid var(--ac);background:transparent;color:var(--ac);cursor:pointer}
+.pill.bad{background:rgba(214,69,69,.13);color:#b3261e}.lk{color:var(--ac);font-weight:600}.mine.sel{border-color:var(--ac)}#tabs{position:sticky;top:0;z-index:5;background:var(--bg,var(--sf));padding:6px 0}.btn.sm{padding:9px 14px;font-size:14px}
+.clist{display:grid;gap:10px}.mine{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--sf2)}.cdet{font-size:13.5px;line-height:1.7;overflow-wrap:anywhere}.cp{color:var(--mut);font-size:12.5px}.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600;line-height:1.6}.pill.good{background:var(--acs);color:var(--ac)}.pill.warn{background:rgba(224,161,0,.15);color:#a07200}
 </style></head><body>
 <div class="wrap">
-<header><div class="mark" aria-hidden="true">ز</div><div><h1>مشروع زاد</h1><small>اطلب منتجاتك وأرسلها مباشرة عبر واتساب</small></div></header>
+<header><div class="mark" aria-hidden="true">ز</div><div><h1>مشروع زاد</h1><small>اطلب منتجاتك وتابع طلباتك</small></div></header>
+<div class="seg" id="tabs"><button type="button" data-pg="new" class="on">🛒 طلب جديد</button><button type="button" data-pg="mine">📋 طلباتي <span id="mcnt"></span></button></div>
+<div id="pgNew">
 <section class="card"><h2 class="ch">اختر المنتجات</h2><div class="list" id="list"></div></section>
 <section class="card"><h2 class="ch">طريقة الاستلام</h2>
 <div class="seg" id="dm"><button type="button" data-m="d">🚚 توصيل</button><button type="button" data-m="p">🏪 استلام بنفسي</button></div>
@@ -74,17 +78,21 @@ select{font:inherit;font-size:16px;color:var(--fg);background:var(--sf2);border:
 <section class="card"><div class="tot"><span>المجموع</span><b id="tot">0.000 ر.ع</b></div><div class="det" id="det"></div>
 <button type="button" class="btn pri" id="sendF" hidden>إرسال الطلب</button>
 <a class="btn dis" id="send" target="_blank" rel="noopener noreferrer" href="#" aria-disabled="true">إرسال الطلب عبر واتساب</a><p class="hint" id="hint"></p></section>
+</div>
+<div id="pgMine" hidden>
 <section class="card done" id="done" hidden><b>تم إرسال طلبك</b><p class="hint" id="doneTxt"></p><a class="btn ghost" id="waDone" target="_blank" rel="noopener noreferrer" href="#" style="margin-top:10px">أرسل نسخة عبر واتساب (اختياري)</a></section>
+<section class="card"><h2 class="ch">طلباتي السابقة</h2><div class="clist" id="mine"></div></section>
 <section class="card" id="payc" hidden></section>
 <section class="card"><h2 class="ch">تقديم شكوى</h2>
-<label>نص الشكوى<textarea id="fCmp" rows="3" placeholder="اكتب شكواك أو ملاحظتك، وسنتواصل معك على الرقم المكتوب في خانة بياناتك"></textarea></label>
+<div class="grid"><label>الاسم<input id="fCN" autocomplete="name"></label><label>رقم التواصل<input id="fCP" inputmode="tel" dir="ltr" style="text-align:right"></label></div>
+<label style="margin-top:12px">نص الشكوى<textarea id="fCmp" rows="3" placeholder="اكتب شكواك أو ملاحظتك، وسنتواصل معك على الرقم المكتوب في خانة بياناتك"></textarea></label>
 <button type="button" class="btn pri" id="sendCF" style="margin-top:12px" hidden>إرسال الشكوى</button>
 <a class="btn ghost" id="sendC" target="_blank" rel="noopener noreferrer" href="#" aria-disabled="true" style="margin-top:12px">إرسال الشكوى عبر واتساب</a></section>
-</div>
+</div></div>
 <div id="lb" hidden><img alt=""><button type="button" class="lp" aria-label="السابق">›</button><button type="button" class="ln" aria-label="التالي">‹</button><span class="lc"></span></div>
 <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
 <script>
-const D={"wa":"96877135267","at":"2026-10-24","form":{"id":"1FAIpQLSfld2hJsA-duBR-0k-AtT2JZYnz4e3kpc757RP1TwOPFUSvqg","eType":"1515076071","eMsg":"1827322959"},"cat":{"url":"https://script.google.com/macros/s/AKfycbxlFclDwoR9OLD93lBeUV4CamwKJ-QVTPxF0YA_SCkiyAAUPUOORN0aLvtmF9TPpgpKQQ/exec","t":1792834824198},"pay":{"methods":[{"n":"المختار الراشدي","d":"92980101"}],"note":"لا تنس إرفاق الإيصال"},"products":[{"id":"75yool","name":"ميدالية برقع","price":0.297,"imgs":[]},{"id":"nalwbf","name":"ميدالية برقع بالجملة","price":0.193,"imgs":[]},{"id":"f9xh05","name":"ميدالية خريطة عمان","price":0.646,"imgs":[]},{"id":"a29s8c","name":"ميدالية خريطة عمان بالجملة","price":0.452,"imgs":[]},{"id":"adup12","name":"ميدالية امرأه","price":0.612,"imgs":[]},{"id":"ftlvxi","name":"ميدالية إمرأه بالجملة","price":0.458,"imgs":[]},{"id":"dmxjkx","name":"ميدالية تولة","price":0.855,"imgs":[]},{"id":"yi0u1a","name":"ميدالية تولة بالجملة","price":0.6,"imgs":[]},{"id":"oy9na3","name":"ميدالية معلمتي","price":0.385,"imgs":[]},{"id":"fvv0j8","name":"ميدالية معلمتي بالجملة","price":0.226,"imgs":[]},{"id":"gria6u","name":"ميدالية مرية","price":0.752,"imgs":[]},{"id":"vurlwo","name":"ميدالية مرية بالجملة","price":0.452,"imgs":[]},{"id":"7om13w","name":"دله عمانية بالجملة","price":0.144,"imgs":[]}]};
+const D={"wa":"96877135267","at":"2026-10-24","form":{"id":"1FAIpQLSfld2hJsA-duBR-0k-AtT2JZYnz4e3kpc757RP1TwOPFUSvqg","eType":"1515076071","eMsg":"1827322959"},"cat":{"url":"https://script.google.com/macros/s/AKfycbxlFclDwoR9OLD93lBeUV4CamwKJ-QVTPxF0YA_SCkiyAAUPUOORN0aLvtmF9TPpgpKQQ/exec","t":1792835345447},"pay":{"methods":[{"n":"المختار الراشدي","d":"92980101"}],"note":"لا تنس إرفاق الإيصال"},"products":[{"id":"75yool","name":"ميدالية برقع","price":0.297,"imgs":[]},{"id":"nalwbf","name":"ميدالية برقع بالجملة","price":0.193,"imgs":[]},{"id":"f9xh05","name":"ميدالية خريطة عمان","price":0.646,"imgs":[]},{"id":"a29s8c","name":"ميدالية خريطة عمان بالجملة","price":0.452,"imgs":[]},{"id":"adup12","name":"ميدالية امرأه","price":0.612,"imgs":[]},{"id":"ftlvxi","name":"ميدالية إمرأه بالجملة","price":0.458,"imgs":[]},{"id":"dmxjkx","name":"ميدالية تولة","price":0.855,"imgs":[]},{"id":"yi0u1a","name":"ميدالية تولة بالجملة","price":0.6,"imgs":[]},{"id":"oy9na3","name":"ميدالية معلمتي","price":0.385,"imgs":[]},{"id":"fvv0j8","name":"ميدالية معلمتي بالجملة","price":0.226,"imgs":[]},{"id":"gria6u","name":"ميدالية مرية","price":0.752,"imgs":[]},{"id":"vurlwo","name":"ميدالية مرية بالجملة","price":0.452,"imgs":[]},{"id":"7om13w","name":"دله عمانية بالجملة","price":0.144,"imgs":[]}]};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>{v=parseFloat(v);return isFinite(v)?v:0};
@@ -111,7 +119,7 @@ function issue(){
   }
   return '';
 }
-function cmpMsg(){return '*شكوى - مشروع زاد*\nرقم المرجع: '+cref+'\nالاسم: '+val('fName')+'\nرقم التواصل: '+val('fPhone')+'\n\n'+val('fCmp')}
+function cmpMsg(){return '*شكوى - مشروع زاد*\nرقم المرجع: '+cref+'\nالاسم: '+val('fCN')+'\nرقم التواصل: '+val('fCP')+'\n\n'+val('fCmp')}
 function postForm(type,text){const b=new URLSearchParams();b.append('entry.'+F.eType,type);b.append('entry.'+F.eMsg,text+'\n#T'+Date.now()+'#');return fetch('https://docs.google.com/forms/d/e/'+F.id+'/formResponse',{method:'POST',mode:'no-cors',body:b})}
 function msg(tot){
   const L=['*طلب جديد - مشروع زاد*','رقم المرجع: '+ref,'','الاسم: '+val('fName'),'رقم التواصل: '+val('fPhone'),'',...(payMethods().length&&PM?['الدفع: '+(PM==='l'?'لاحقاً':'الآن')]:[]),...(DM==='d'?['الاستلام: توصيل','الدولة: '+val('fCountry'),'المحافظة: '+val('fGov'),'الولاية: '+val('fWil'),'الحارة: '+val('fHar'),...(val('fLm')?['وصف المكان: '+val('fLm')]:[]),...(LOC?['الموقع: https://www.google.com/maps?q='+LOC.lat.toFixed(6)+','+LOC.lng.toFixed(6)]:[])]:DM==='p'?['الاستلام: استلام بنفسي']:[]),'','المنتجات:'];
@@ -122,8 +130,8 @@ function msg(tot){
 }
 function cmpIssue(){
   if(!F&&!waDigits(D.wa))return 'رقم واتساب صاحب المشروع غير مضبوط.';
-  if(!val('fName'))return 'اكتب اسمك في خانة بياناتك.';
-  if(waDigits(val('fPhone')).length<8)return 'اكتب رقم تواصل صحيح في خانة بياناتك.';
+  if(!val('fCN'))return 'اكتب اسمك.';
+  if(waDigits(val('fCP')).length<8)return 'اكتب رقم تواصل صحيح.';
   if(val('fCmp').length<3)return 'اكتب نص الشكوى.';
   return '';
 }
@@ -157,10 +165,10 @@ function renderList(){
 renderList();
 try{const s=JSON.parse(localStorage.getItem('zad-info')||'{}');$('#fName').value=s.name||'';$('#fPhone').value=s.phone||''}catch(e){}
 function sentOrder(m){
-  LO={ref:ref,name:val('fName'),phone:val('fPhone'),total:lines().reduce((a,l)=>a+l.sum,0),declared:0,later:PM==='l',open:false};saveLO();showPay();
+  LO={ref:ref,at:Date.now(),name:val('fName'),phone:val('fPhone'),total:lines().reduce((a,l)=>a+l.sum,0),items:lines().map(l=>({n:l.p.name,q:l.q,note:String(l.o.note||'').replace(/\s+/g,' ').trim()})),dl:DM==='d'?{m:'d',g:val('fGov'),w:val('fWil'),h:val('fHar'),lm:val('fLm'),...(LOC?{lat:LOC.lat,lng:LOC.lng}:{})}:{m:'p'},declared:0,later:PM==='l',open:false};ORD.unshift(LO);ORD=ORD.slice(0,30);saveLO();showPay();renderMine();goPg('mine');
   $('#done').hidden=false;$('#doneTxt').textContent='رقم المرجع: '+ref+'. سيصل طلبك إلى صاحب المشروع وسيتواصل معك. لتأكيد أسرع يمكنك إرسال نسخة عبر واتساب.';
   const w=$('#waDone');w.hidden=!waDigits(D.wa);w.href='https://wa.me/'+waDigits(D.wa)+'?text='+encodeURIComponent(m);
-  Object.keys(cart).forEach(k=>delete cart[k]);Object.keys(copt).forEach(k=>delete copt[k]);renderList();$('#fNote').value='';ref=newRef();refresh();$('#done').scrollIntoView({behavior:'smooth',block:'center'});
+  Object.keys(cart).forEach(k=>delete cart[k]);Object.keys(copt).forEach(k=>delete copt[k]);renderList();$('#fNote').value='';ref=newRef();refresh();
 }
 document.addEventListener('click',e=>{
   const sf=e.target.closest('#sendF,#sendCF');
@@ -192,7 +200,7 @@ function applyCat(c){
   if(c.pay)D.pay=c.pay;
   D.ords=c.ords||{};
   Object.keys(cart).forEach(k=>{if(!D.products.some(p=>p.id===k))delete cart[k]});
-  renderList();refresh();try{if(LO&&!document.activeElement.closest('#payc'))showPay()}catch(e){}
+  renderList();refresh();try{renderMine();if(LO&&!document.activeElement.closest('#payc'))showPay()}catch(e){}
 }
 const CU=D.cat&&D.cat.url;let lastT=0;
 if(CU){
@@ -201,15 +209,42 @@ if(CU){
   pull();setInterval(pull,45000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
 }
 
-let LO=null;
-try{LO=JSON.parse(localStorage.getItem('zad-last')||'null')}catch(e){}
-function saveLO(){try{localStorage.setItem('zad-last',JSON.stringify(LO))}catch(e){}}
+let LO=null,ORD=[];
+try{ORD=JSON.parse(localStorage.getItem('zad-ords')||'[]');if(!Array.isArray(ORD))ORD=[]}catch(e){ORD=[]}
+try{const old=JSON.parse(localStorage.getItem('zad-last')||'null');if(old&&old.ref&&!ORD.some(x=>x.ref===old.ref)){old.at=old.at||0;ORD.push(old)}}catch(e){}
+LO=ORD[0]||null;
+function saveLO(){try{localStorage.setItem('zad-ords',JSON.stringify(ORD.slice(0,30)));if(LO)localStorage.setItem('zad-last',JSON.stringify(LO))}catch(e){}}
+function ordStatus(o){const r=(D.ords||{})[String(o.ref).toLowerCase()];if(r&&r.st==='a')return['good','✅ تم قبول طلبك وجاري تجهيزه'];if(r&&r.st==='r')return['bad','❌ لم يُقبل الطلب، تواصل معنا عبر واتساب'];return['warn','⏳ بانتظار قبول صاحب المشروع']}
+function renderMine(){
+  const box=$('#mine');if(!box)return;
+  $('#mcnt').textContent=ORD.length?'('+ORD.length+')':'';
+  if(!ORD.length){box.innerHTML='<div class="empty">لا توجد طلبات سابقة على هذا الجهاز. بعد إرسال أول طلب سيظهر هنا مع حالته.</div>';return}
+  box.innerHTML=ORD.map(o=>{
+    const [c,l]=ordStatus(o),st=pstate(o),r=(D.ords||{})[String(o.ref).toLowerCase()]||{};
+    const it=(o.items||[]).map(i=>'<div class="cdet">• <bdi>'+esc(i.n)+'</bdi> × '+n(i.q)+(i.note?'<br><span style="color:var(--mut)">📝 '+esc(i.note)+'</span>':'')+'</div>').join('');
+    const d=o.dl;let dh='';
+    if(d){dh=d.m==='d'?'<div class="cdet">🚚 توصيل — '+[d.g,d.w,d.h].filter(Boolean).map(esc).join(' · ')+(d.lm?'<br>📌 '+esc(d.lm):'')+(isFinite(d.lat)&&d.lat!=null?'<br><a class="lk" target="_blank" rel="noopener" href="https://www.google.com/maps?q='+(+d.lat)+','+(+d.lng)+'">🗺️ عرض الموقع على الخريطة</a>':'')+'</div>':'<div class="cdet">🏪 استلام بنفسك</div>'}
+    let py='';
+    if(st.confFull)py='<span class="pill good">✅ مدفوع بالكامل</span>';
+    else if(st.paid>0)py='<span class="pill warn">دفعت '+omr(st.paid)+' ر.ع'+(st.conf>=st.dec?'':' (بانتظار التأكيد)')+' · المتبقي '+omr(st.rest)+' ر.ع</span>';
+    else py='<span class="pill warn">'+(o.later?'🕒 الدفع لاحقاً · ':'')+'لم يُدفع بعد</span>';
+    if(r.ls==='no')py+=' <span class="pill bad">❌ لم يُقبل إيصال الدفع الأخير</span>';
+    const canPay=!st.full&&payMethods().length;
+    return '<div class="mine'+(LO&&LO.ref===o.ref?' sel':'')+'" data-oref="'+esc(o.ref)+'"><div><b>طلب '+esc(o.ref)+'</b> <span class="cp">'+(o.at?new Date(o.at).toLocaleString('ar-OM',{dateStyle:'short',timeStyle:'short'}):'')+'</span><div style="margin:6px 0"><span class="pill '+c+'">'+l+'</span></div>'+it+dh+'<div class="cdet" style="margin-top:6px"><b>'+omr(n(o.total))+' ر.ع</b></div><div style="margin-top:6px">'+py+'</div>'+(canPay?'<button type="button" class="btn ghost sm" data-psel="'+esc(o.ref)+'" style="margin-top:8px">'+(LO&&LO.ref===o.ref?'تفاصيل الدفع أدناه ⬇':'💳 ادفع أو أرسل إيصال')+'</button>':'')+'</div></div>'}).join('');
+}
+function fillC(){try{const s=JSON.parse(localStorage.getItem('zad-info')||'{}'),o=ORD[0]||{};if(!$('#fCN').value)$('#fCN').value=s.name||o.name||'';if(!$('#fCP').value)$('#fCP').value=s.phone||o.phone||''}catch(e){}}
+function goPg(p){$('#pgNew').hidden=p!=='new';$('#pgMine').hidden=p!=='mine';document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.pg===p));if(p==='mine'){renderMine();fillC()}try{window.scrollTo({top:0})}catch(e){}}
+document.addEventListener('click',e=>{
+  const tb=e.target.closest('#tabs [data-pg]');if(tb){goPg(tb.dataset.pg);return}
+  const ps=e.target.closest('[data-psel]');if(ps){const o=ORD.find(x=>x.ref===ps.dataset.psel);if(o){LO=o;saveLO();showPay();renderMine();const pc=$('#payc');if(pc&&!pc.hidden)pc.scrollIntoView({behavior:'smooth',block:'start'})}}
+});
 function shrinkRc(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{try{const k=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',0.72).split(',')[1])}catch(e){rej(e)}};im.onerror=rej;im.src=u})}
 function payMethods(){return (D.pay&&D.pay.methods)||[]}
 function waRcpt(){return waDigits(D.wa)&&LO?'https://wa.me/'+waDigits(D.wa)+'?text='+encodeURIComponent('إيصال الدفع للطلب '+LO.ref+' - '+LO.name):''}
-function pstate(){
-  const o=(D.ords||{})[String(LO.ref).toLowerCase()]||null;
-  const conf=o&&o.st==='a'?n(o.p):0,dec=Math.max(0,Math.round((n(LO.declared)-(o?n(o.ra):0))*1000)/1000),paid=Math.max(conf,dec),tot=n(LO.total);
+function pstate(L){
+  L=L||LO;
+  const o=(D.ords||{})[String(L.ref).toLowerCase()]||null;
+  const conf=o&&o.st==='a'?n(o.p):0,dec=Math.max(0,Math.round((n(L.declared)-(o?n(o.ra):0))*1000)/1000),paid=Math.max(conf,dec),tot=n(L.total);
   return {o,conf,dec,paid,rest:Math.max(0,Math.round((tot-paid)*1000)/1000),tot,full:paid>=tot-0.0005&&tot>0,confFull:conf>=tot-0.0005&&tot>0};
 }
 function showPay(){
@@ -255,7 +290,7 @@ function payUI(){
   if(h)h.textContent=part?'اكتب المبلغ الذي ستحوّله الآن، وأقصاه '+omr(st.rest)+' ر.ع.':'سيُسجَّل المبلغ المتبقي كاملاً: '+omr(st.rest)+' ر.ع.';
 }
 document.addEventListener('change',e=>{if(e.target.name==='pt')payUI()});
-document.addEventListener('click',e=>{const pb=e.target.closest('[data-pm]');if(pb){PM=pb.dataset.pm;document.querySelectorAll('#pmw button').forEach(x=>x.classList.toggle('on',x===pb));return}if(e.target.closest('#payNow')&&LO){LO.open=true;saveLO();showPay()}});
+document.addEventListener('click',e=>{const pb=e.target.closest('[data-pm]');if(pb){PM=pb.dataset.pm;document.querySelectorAll('#pmw button').forEach(x=>x.classList.toggle('on',x===pb));return}if(e.target.closest('#payNow')&&LO){LO.open=true;saveLO();showPay();renderMine()}});
 document.addEventListener('click',e=>{
   const pc=e.target.closest('#payConf');if(!pc||!LO)return;
   const st=pstate(),t=val('fTxn'),part=(document.querySelector('input[name=pt]:checked')||{}).value==='part';
@@ -275,11 +310,11 @@ document.addEventListener('click',e=>{
   const upl=rf&&CU?(toast('جاري رفع صورة الإيصال...'),shrinkRc(rf).then(b64=>fetch(CU,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({k:'rcpt',ref:LO.ref,data:b64})}).then(r=>r.json()).then(j=>{if(!j||!j.ok||!j.id)throw 0;return 'https://drive.google.com/file/d/'+j.id+'/view'}))
     .catch(()=>{toast('تعذر رفع الصورة. سيصل التأكيد بدونها، يمكنك إرسالها عبر واتساب.');return ''})):Promise.resolve('');
   upl.then(link=>postForm('payment',link?text.replace('\nرقم العملية: ','\nصورة الإيصال: '+link+'\nرقم العملية: '):text)).then(()=>{
-    LO.declared=Math.round((n(LO.declared)+amt)*1000)/1000;saveLO();showPay();
+    LO.declared=Math.round((n(LO.declared)+amt)*1000)/1000;saveLO();showPay();renderMine();
     toast(isFull?'تم إرسال تأكيد الدفع الكامل':'تم إرسال الدفعة. المتبقي '+omr(Math.max(0,st.rest-amt))+' ر.ع');
   }).catch(()=>toast('تعذر الإرسال. تأكد من الاتصال بالإنترنت، أو أرسل الإيصال عبر واتساب.')).then(()=>{setTimeout(()=>{busy=false},2000)});
 });
-showPay();
+showPay();renderMine();
 
 let LBL=[],LBI=0;
 function lbShow(){const lb=$('#lb');lb.querySelector('img').src=LBL[LBI];lb.querySelector('.lc').textContent=(LBI+1)+' / '+LBL.length;lb.querySelector('.lp').hidden=LBL.length<2;lb.querySelector('.ln').hidden=LBL.length<2;lb.hidden=false}
